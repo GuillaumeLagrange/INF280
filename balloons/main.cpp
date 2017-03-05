@@ -1,6 +1,8 @@
 #include <iostream>
 #include <algorithm>
 #include <limits>
+#include <vector>
+#include <cmath>
 
 using namespace std;
 
@@ -82,6 +84,7 @@ int main() {
 int computeVolumes(int * order, float * xPoints, float * yPoints,
         float * zPoints, float * box, int n, float * radius)
 {
+    vector<float>radiuses;
     /* Remise de radius à 0 */
     for (int i = 0; i < n; i ++)
         radius[i] = 0.f;
@@ -97,19 +100,23 @@ int computeVolumes(int * order, float * xPoints, float * yPoints,
                 minDistRadius = min(minDistRadius, dist - radius[k]);
             }
         }
-        radius[j] = min(minDistRadius,
-                    min(xPoints[j],
-                    min(box[0] - xPoints[j],
-                    min(yPoints[j],
-                    min(box[1] - yPoints[j],
-                    min(zPoints[j], box[2] - zPoints[j]))))));
+        radiuses.clear();
+        radiuses.push_back(minDistRadius);
+        radiuses.push_back(xPoints[j]);
+        radiuses.push_back(yPoints[j]);
+        radiuses.push_back(zPoints[j]);
+        radiuses.push_back(box[0] - xPoints[j]);
+        radiuses.push_back(box[1] - yPoints[j]);
+        radiuses.push_back(box[2] - zPoints[j]);
+
+        radius[j] = *min_element(radiuses.begin(), radiuses.end());
     }
     float volumeBallons = 0.f;
     for(int i = 0; i < n; i++) {
-        volumeBallons += M_PI*pow(radius[i], 3);
+        volumeBallons += 4.f/3.f * M_PI * pow(radius[i], 3);
     }
 
-    float volume = box[0] * box[0] * box[0];
+    float volume = box[0] * box[0] * box[0] - volumeBallons;
 
     return round(volume);
 }
