@@ -28,6 +28,20 @@ int main() {
         for (int j = 0; j < scribers; j++)
             cout << scribersRepartition[j] << endl;
         cout << endl << endl;
+
+        int minDich = 0;
+        int maxDich = 0;
+        for (int j = 0; j < books; j++)
+            maxDich += booksPages[j];
+        while(minDich - maxDich > 1)
+            if (computeRepartition((minDich + maxDich)/2, booksPages))
+                maxDich = (minDich + maxDich)/2;
+            else
+                minDich = (minDich + maxDich)/2;
+
+        for (int j = 0; j < scribers; j++)
+            cout << scribersRepartition[j] << endl;
+        cout << endl << endl;
     }
 
     return 0;
@@ -59,10 +73,10 @@ bool computeRepartition(int k, long * booksPages) {
     }
 
     /* At least one book must be assigned to each scriber */
-finish:
-    while(currBook >= 0) {
-        scribersRepartition[currBook] = currBook;
-        currBook --;
-    }
-    return true;
+    finish:
+        while(currBook >= 0) {
+            scribersRepartition[currBook] = currBook;
+            currBook --;
+        }
+        return true;
 }
