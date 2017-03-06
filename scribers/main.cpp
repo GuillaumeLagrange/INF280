@@ -34,9 +34,6 @@ int main() {
             else
                 minDich = (minDich + maxDich)/2;
 
-        //for (int j = 0; j < scribers; j++)
-            //cout << scribersRepartition[j] << endl;
-        //cout << endl << endl;
         for (int j = 0; j < scribers - 1; j++) {
             for (int k = scribersRepartition[j]; k < scribersRepartition[j+1]; k++)
                 cout << booksPages[k] << " ";
@@ -60,7 +57,7 @@ bool computeRepartition(int k, long * booksPages) {
     int currBook = books - 1;
 
     while(true) {
-        int total = 0;
+        long total = 0;
         bool scriberDone = false;
         while(!scriberDone) {
             if (total + booksPages[currBook] <= k) {
