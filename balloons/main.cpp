@@ -6,16 +6,16 @@
 
 using namespace std;
 
-int computeVolumes(int * order, float * xPoints, float * yPoints,
-        float * zPoints, float * box, int n, float * radius);
+int computeVolumes(int * order, double * xPoints, double * yPoints,
+        double * zPoints, double * box, int n, double * radius);
 
 int main() {
     int n;
-    float xPoints[6];
-    float yPoints[6];
-    float zPoints[6];
-    float firstCorner[3];
-    float secondCorner[3];
+    double xPoints[6];
+    double yPoints[6];
+    double zPoints[6];
+    double firstCorner[3];
+    double secondCorner[3];
     int serial = 0;
 
     while(true) {
@@ -25,7 +25,7 @@ int main() {
             return 0;
 
         serial ++;
-        float radius[n];
+        double radius[n];
 
         for (int i = 0; i < 3; i++) {
             cin >> firstCorner[i];
@@ -42,9 +42,9 @@ int main() {
         }
 
         /* Changement de repère pour mettre un coin de la boite à 0,0,0) */
-        float minX = min(firstCorner[0], secondCorner[0]);
-        float minY = min(firstCorner[1], secondCorner[1]);
-        float minZ = min(firstCorner[2], secondCorner[2]);
+        double minX = min(firstCorner[0], secondCorner[0]);
+        double minY = min(firstCorner[1], secondCorner[1]);
+        double minZ = min(firstCorner[2], secondCorner[2]);
 
         firstCorner[0] -= minX;
         firstCorner[1] -= minY;
@@ -54,7 +54,7 @@ int main() {
         secondCorner[1] -= minY;
         secondCorner[2] -= minZ;
 
-        float box[3];
+        double box[3];
         box[0] = max(firstCorner[0], secondCorner[0]);
         box[1] = max(firstCorner[1], secondCorner[1]);
         box[2] = max(firstCorner[2], secondCorner[2]);
@@ -81,20 +81,20 @@ int main() {
     return -1;
 };
 
-int computeVolumes(int * order, float * xPoints, float * yPoints,
-        float * zPoints, float * box, int n, float * radius)
+int computeVolumes(int * order, double * xPoints, double * yPoints,
+        double * zPoints, double * box, int n, double * radius)
 {
-    vector<float>radiuses;
+    vector<double>radiuses;
     /* Remise de radius à 0 */
     for (int i = 0; i < n; i ++)
         radius[i] = 0.f;
 
     for (int i = 0; i < n; i++) {
         int j = order[i];
-        float minDistRadius = numeric_limits<float>::max();
+        double minDistRadius = numeric_limits<double>::max();
         for (int k = 0; k < n; k++) {
             if (k != j) {
-                float dist = sqrt(pow(xPoints[j] - xPoints[k], 2) +
+                double dist = sqrt(pow(xPoints[j] - xPoints[k], 2) +
                                   pow(yPoints[j] - yPoints[k], 2) +
                                   pow(zPoints[j] - yPoints[k], 2));
                 minDistRadius = min(minDistRadius, dist - radius[k]);
@@ -111,12 +111,12 @@ int computeVolumes(int * order, float * xPoints, float * yPoints,
 
         radius[j] = *min_element(radiuses.begin(), radiuses.end());
     }
-    float volumeBallons = 0.f;
+    double volumeBallons = 0.f;
     for(int i = 0; i < n; i++) {
         volumeBallons += 4.f/3.f * M_PI * pow(radius[i], 3);
     }
 
-    float volume = box[0] * box[0] * box[0] - volumeBallons;
+    double volume = box[0] * box[0] * box[0] - volumeBallons;
 
     return round(volume);
 }
