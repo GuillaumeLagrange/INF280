@@ -26,6 +26,16 @@ int main() {
 
         int minDich = 0;
         int maxDich = 0;
+
+        if (scribers == 1) {
+            for (int j = 0; j < books; j++) {
+                cout << booksPages[j];
+                if (j != books - 1)
+                    cout << " ";
+            }
+            goto skip;
+        }
+
         for (int j = 0; j < books; j++)
             maxDich += booksPages[j];
         while((maxDich- minDich ) > 1)
@@ -44,6 +54,7 @@ int main() {
             if (k != books - 1)
                 cout << " ";
         }
+    skip:
         cout << endl;
     }
 
