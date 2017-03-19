@@ -72,7 +72,8 @@ bool computeRepartition(int k, long * booksPages) {
         bool scriberDone = false;
         while(!scriberDone) {
             if (total + booksPages[currBook] <= k) {
-                total += booksPages[currBook--];
+                total += booksPages[currBook];
+                currBook--;
                 if (currBook == -1)
                     return true;
                 else if (currBook == currScriber)
