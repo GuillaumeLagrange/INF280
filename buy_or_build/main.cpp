@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <vector>
 #include <utility>
+#include <limits>
 
 using namespace std;
 
@@ -56,6 +57,7 @@ int main() {
 
         /* Cycling through all subnetwork buying possibilities */
         uint8_t counter = 0;
+        int min_cost = numeric_limits<int>::max();
         for(int i=0; i<256; i++) {
             vector<vector<int>> subnetworks_bought;
             int cost = 0;
@@ -70,7 +72,11 @@ int main() {
             vector<vector<int>> modified_graph = modify_graph(cities_graph,
                     subnetworks_bought);
             cost += kruskal(modified_graph);
+            if (cost < min_cost)
+                min_cost = cost;
         }
+
+        cout << min_cost << endl << endl;
     }
 
     return 0;
