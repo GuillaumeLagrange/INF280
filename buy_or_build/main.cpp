@@ -1,7 +1,13 @@
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <utility>
 
 using namespace std;
+
+int kruskal(vector<vector<int>> cities_graph);
+vector<vector<int>> modify_graph(vector<vector <int>> cities_graph,
+        vector<vector<int>> &subnetworks);
 
 int main() {
     int cases;
@@ -47,7 +53,35 @@ int main() {
                     cities_graph[i][j] = dist;
                     cities_graph[j][i] = dist;
                 }
+
+        /* Cycling through all subnetwork buying possibilities */
+        uint8_t counter = 0;
+        for(int i=0; i<256; i++) {
+            vector<vector<int>> subnetworks_bought;
+            int cost = 0;
+            for(unsigned int j=0; j<8; j++) {
+                if (j+1 <= subnetworks.size())
+                    if (counter & (1<<j)) {
+                        subnetworks_bought.push_back(subnetworks[j]);
+                        cost += sub_costs[j];
+                    }
+            }
+            counter ++;
+            vector<vector<int>> modified_graph = modify_graph(cities_graph,
+                    subnetworks_bought);
+            cost += kruskal(modified_graph);
+        }
     }
 
     return 0;
 };
+
+vector<vector<int>> modify_graph(vector<vector <int>> cities_graph,
+        vector<vector<int>> &subnetworks) {
+    for(auto subnetwork : subnetworks)
+        for(auto city : subnetwork)
+            for(auto other_city : subnetwork) {
+                cities_graph[city][other_city] = 0;
+    }
+    return cities_graph;
+}
