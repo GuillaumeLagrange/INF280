@@ -2,12 +2,13 @@
 #include <algorithm>
 #include <vector>
 #include <utility>
+#include <tuple>
 #include <limits>
 
 using namespace std;
 
-int kruskal(vector<vector<int>> cities_graph);
-vector<vector<int>> modify_graph(vector<vector <int>> cities_graph,
+int kruskal(vector<tuple<int, int, int>> edges);
+vector<tuple<int, int, int>> modify_graph(vector<tuple <int, int, int>> cities_graph,
         vector<vector<int>> &subnetworks);
 
 int main() {
@@ -43,17 +44,15 @@ int main() {
         }
 
         /* Creating city graph */
-        vector<vector <int>> cities_graph(n, vector<int>(n, 0));
+        vector<tuple <int, int, int>> cities_graph(0);
         for(int i=0; i<n; i++)
-            for(int j=0; j<n; j++)
-                if(i!=j) {
-                    pair<int, int> coord1 = cities_coord[i];
-                    pair<int, int> coord2 = cities_coord[j];
-                    int dist = pow(coord1.first - coord2.first, 2) +
-                               pow(coord1.second - coord2.second, 2);
-                    cities_graph[i][j] = dist;
-                    cities_graph[j][i] = dist;
-                }
+            for(int j=i+1; j<n; j++) {
+                pair<int, int> coord1 = cities_coord[i];
+                pair<int, int> coord2 = cities_coord[j];
+                int dist = pow(coord1.first - coord2.first, 2) +
+                           pow(coord1.second - coord2.second, 2);
+                cities_graph.push_back(make_tuple(i, j, dist));
+            }
 
         /* Cycling through all subnetwork buying possibilities */
         uint8_t counter = 0;
@@ -69,7 +68,7 @@ int main() {
                     }
             }
             counter ++;
-            vector<vector<int>> modified_graph = modify_graph(cities_graph,
+            auto modified_graph = modify_graph(cities_graph,
                     subnetworks_bought);
             cost += kruskal(modified_graph);
             if (cost < min_cost)
@@ -82,12 +81,13 @@ int main() {
     return 0;
 };
 
-vector<vector<int>> modify_graph(vector<vector <int>> cities_graph,
-        vector<vector<int>> &subnetworks) {
-    for(auto subnetwork : subnetworks)
-        for(auto city : subnetwork)
-            for(auto other_city : subnetwork) {
-                cities_graph[city][other_city] = 0;
-    }
+vector<tuple<int, int, int>> modify_graph(vector<tuple<int, int, int>> cities_graph,
+        vector<vector<int>> &subnetworks)
+{
+    for(auto it=cities_graph.begin(); it < cities_graph.end(); it++)
+        if(find(subnetworks.begin(), subnetworks.end(), get<0>(*it)) != subnetworks.end() ||
+           find(subnetworks.begin(), subnetworks.end(), get<1>(*it)) != subnetworks.end())
+            cities_graph.erase(it);
+
     return cities_graph;
 }
