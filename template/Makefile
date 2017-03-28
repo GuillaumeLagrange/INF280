@@ -16,4 +16,4 @@ dbg : $(EXE).cpp
 	rm $@
 
 clean :
-	rm -f $(EXE) *.o *.d a.out test.cpp
+	rm -f $(EXE) *.o *.d a.out test.cpp dbg
