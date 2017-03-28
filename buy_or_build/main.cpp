@@ -96,24 +96,25 @@ vector<tuple<int, int, int>> modify_graph(vector<tuple<int, int, int>> cities_gr
 }
 
 /* Functions from the slides */
-map<int, pair<int, unsigned int>> Sets;
 
-void MakeSet( int x)
+void MakeSet( int x, map<int, pair<int, unsigned int>>& Sets)
 {
     Sets.insert(make_pair(x, make_pair(x, 0)));
 }
 
-int Find( int x)
+int Find( int x, map<int, pair<int, unsigned int>>& Sets)
+
 {
     if (Sets[x].first == x)
         return x;              // Parent == x ?
     else
-        return Sets[x].first = Find(Sets[x].first);  // Get Parent
+        return Sets[x].first = Find(Sets[x].first, Sets);  // Get Parent
 }
 
-void Union( int x, int y)
+void Union( int x, int y, map<int, pair<int, unsigned int>>& Sets)
+
 {
-    int parentX = Find(x), parentY = Find(y);
+    int parentX = Find(x, Sets), parentY = Find(y, Sets);
     int rankX = Sets[parentX].second, rankY = Sets[parentY].second;
     if (parentX == parentY)
         return ;
@@ -131,16 +132,16 @@ bool mycompare (const tuple<int,int,int> &l, const tuple<int,int,int> &r){
 
 int kruskal(vector<tuple<int,int,int>> edges, int n)
 {
-    Sets = map<int, pair<int, unsigned int>>();
+    map<int, pair<int, unsigned int>> Sets = map<int, pair<int, unsigned int>>();
     set<tuple<int,int,int>> A;
     for(int u=0; u<n; u++)
-        MakeSet(u);
+        MakeSet(u, Sets);
 
     sort(edges.begin(), edges.end(), mycompare);
 
     for(auto tmp : edges) {
-        if (Find(get<0>(tmp)) != Find(get<1>(tmp))) {
-            Union(get<0>(tmp), get<1>(tmp));
+        if (Find(get<0>(tmp), Sets) != Find(get<1>(tmp), Sets)) {
+            Union(get<0>(tmp), get<1>(tmp), Sets);
             A.insert(tmp);
         }
     }
