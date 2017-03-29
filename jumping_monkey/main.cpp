@@ -16,15 +16,15 @@
 using namespace std;
 
 int n, m;
-long adj[MAXN];
-long curr_state; // Contains wether the monkey can be at each tree or not
-unordered_set<long> state_history; // Register already visited states
-queue<pair<int, pair<long, vector<int>>>> bfs_queue; // Queue used for BFS
+uint32_t adj[MAXN];
+uint32_t curr_state; // Contains wether the monkey can be at each tree or not
+unordered_set<uint32_t> state_history; // Register already visited states
+queue<pair<int, pair<uint32_t, vector<int>>>> bfs_queue; // Queue used for BFS
 
 /* Generates the new state if node shot is shot at */
-long new_state(int shot) {
+uint32_t new_state(int shot) {
     curr_state &= ~(1<<shot);
-    long n_state = 0;
+    uint32_t n_state = 0;
 
     for(int i=0; i<n; i++) {
         if(curr_state & (1<<i))
