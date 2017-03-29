@@ -6,6 +6,7 @@
 #include <iostream>
 #include <algorithm>
 #include <cstdint>
+#include <cstring>
 #include <queue>
 #include <utility>
 #include <unordered_set>
@@ -85,6 +86,8 @@ int main() {
         if(n==0 && m==0)
             break;
 
+        /* Clearing adj */
+        memset(adj, 0, sizeof(adj));
         /* Registering adjencies */
         for(int i=0; i<m; i++) {
             int a,b;
