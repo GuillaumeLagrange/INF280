@@ -21,7 +21,7 @@ uint32_t curr_state; // Contains wether the monkey can be at each tree or not
 vector<int> success_path;
 
 /* Generates the new state if node shot is shot at */
-uint32_t new_state(int shot) {
+inline uint32_t new_state(int shot) {
     curr_state &= ~(1<<shot);
     uint32_t n_state = 0;
 
