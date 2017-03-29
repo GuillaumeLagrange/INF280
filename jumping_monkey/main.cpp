@@ -16,21 +16,19 @@
 using namespace std;
 
 int n, m;
-uint32_t adj[MAXN];
-uint32_t curr_state; // Contains wether the monkey can be at each tree or not
-unordered_set<uint32_t> state_history; // Register already visited states
-queue<pair<int, pair<uint32_t, vector<int>>>> bfs_queue; // Queue used for BFS
+long adj[MAXN];
+long curr_state; // Contains wether the monkey can be at each tree or not
+unordered_set<long> state_history; // Register already visited states
+queue<pair<int, pair<long, vector<int>>>> bfs_queue; // Queue used for BFS
 
 /* Generates the new state if node shot is shot at */
-uint32_t new_state(int shot) {
+long new_state(int shot) {
     curr_state &= ~(1<<shot);
-    uint32_t n_state = 0;
+    long n_state = 0;
 
     for(int i=0; i<n; i++) {
         if(curr_state & (1<<i))
-            for(int j=0; j<n; j++)
-                if(adj[i] & (1<<j))
-                    n_state |= (1<<j);
+            n_state |= adj[i];
     }
     return n_state;
 }
@@ -70,7 +68,7 @@ void bfs()
                 if(n_state & (1<<j) || n_state == 0) {
                     /* Copying old path */
                     vector<int> n_path = vector<int>(curr_path);
-                    n_path.push_back(j);
+                    n_path.push_back(i);
                     bfs_queue.push(make_pair(j, make_pair(n_state, n_path)));
                 }
         }
