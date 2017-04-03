@@ -1,6 +1,6 @@
 /* Guillaume Lagrange
- * Jumping Monkey https://icpcarchive.ecs.baylor.edu/index.php?option=onlinejudge&page=show_problem&problem=2960
- * Trying to use scanf for the first time
+ * Jumping Monkey
+ * https://icpcarchive.ecs.baylor.edu/index.php?option=onlinejudge&page=show_problem&problem=2960
  */
 
 #include <iostream>
