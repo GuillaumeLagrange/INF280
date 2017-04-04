@@ -80,15 +80,15 @@ Vec2d circumcenter(Vec2d a, Vec2d b, Vec2d c)
 }
 
 int main() {
-    string i;
-    cin >> i;
-    cout << i << endl;
-    double a = (double) atof(i.c_str());
-    cout << a << endl;
+    while (true) {
+        string str1, str2;
+        cin >> str1 >> str2;
+        if (str1 == "END")
+            break;
+        double a = (double) atof(str1.c_str());
+        double b = (double) atof(str2.c_str());
+        cout << a  << " " << b << endl;
 
-    Vec2d u = Vec2d(1, 1);
-    Vec2d v = Vec2d(2, 0);
-    cout << u.dot(v)<< endl;
-    cout << hypot(u.x, u.y) << endl;
+    }
     return 0;
 };
