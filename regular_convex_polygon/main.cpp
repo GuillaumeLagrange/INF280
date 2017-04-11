@@ -4,7 +4,7 @@
 #include <cmath>
 #include <ctgmath>
 
-#define EPS 0.000000001
+#define EPS 0.0000001
 
 using namespace std;
 
@@ -81,14 +81,57 @@ Vec2d circumcenter(Vec2d a, Vec2d b, Vec2d c)
 
 int main() {
     while (true) {
-        string str1, str2;
-        cin >> str1 >> str2;
-        if (str1 == "END")
-            break;
-        double a = (double) atof(str1.c_str());
-        double b = (double) atof(str2.c_str());
-        cout << a  << " " << b << endl;
+        Vec2d points[3];
 
+        /* Get points from input */
+        for(int i=0; i<3; i++) {
+            string str1, str2;
+            cin >> str1 >> str2;
+            if (str1 == "END")
+                return 0;
+            double x = (double) atof(str1.c_str());
+            double y = (double) atof(str2.c_str());
+            points[i] = Vec2d(x,y);
+        }
+
+        /* Get angles at the center of the circumscribed circle */
+        Vec2d g = circumcenter(points[0], points[1], points[2]);
+        double angles[3];
+        for(int i=0; i<3; i++) {
+            Vec2d a = Vec2d(g, points[(i+1)%3]);
+            Vec2d b = Vec2d(g, points[(i+2)%3]);
+            angles[i] = a.unsigned_angle(b);
+        }
+
+        /* Find the smallest angle and putting it first */
+        for(int i=1; i<3; i++) {
+            if (angles[0] < angles[i]) {
+                double tmp = angles[0];
+                angles[0] = angles[i];
+                angles[i] = tmp;
+            }
+        }
+
+        /* Find the biggest angle that divides all three angles */
+        int result = - 1;
+        for (int i=1; i<= 1000; i++) {
+            double current_angle = angles[0] / i;
+            double rem1 = fmod(angles[1], current_angle);
+            if(fabs(rem1) < EPS || fabs(current_angle - rem1) < EPS) {
+                double rem2 = fmod(angles[2], current_angle);
+                if(fabs(rem2) < EPS || fabs(current_angle - rem2) < EPS) {
+                    result = i;
+                    break;
+                }
+            }
+        }
+
+        double angle = angles[0]/result;
+        double d = 2*M_PI/angle;
+        d += 0.5;
+        int n = (int) d;
+        cout << n << endl;
     }
-    return 0;
+
+    return -1;
 };
