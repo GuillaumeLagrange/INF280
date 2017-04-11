@@ -55,6 +55,10 @@ struct Vec2d {
     inline double unsigned_angle(Vec2d v) const {
         return acos(this->dot(v)/(this->norm()*v.norm()));
     }
+
+    inline double ox_angle() const {
+        return atan2(this->y, this->x);
+    }
 };
 
 Vec2d circumcenter(Vec2d a, Vec2d b, Vec2d c)
@@ -96,12 +100,29 @@ int main() {
 
         /* Get angles at the center of the circumscribed circle */
         Vec2d g = circumcenter(points[0], points[1], points[2]);
+        Vec2d center_vectors[3];
+        for(int i=0; i<3; i++)
+            center_vectors[i] = Vec2d(g, points[i]);
+        double angle1 = center_vectors[1].ox_angle() - center_vectors[0].ox_angle();
+        double angle2 = center_vectors[2].ox_angle() - center_vectors[0].ox_angle();
+
+        angle1 = fmod(angle1 + 2*M_PI, 2*M_PI);
+        angle2 = fmod(angle2 + 2*M_PI, 2*M_PI);
+
+        int indexes[3] = {0,1,2};
+
+        if (angle2 < angle1) {
+            indexes[1] = 2;
+            indexes[2] = 1;
+        }
+
         double angles[3];
         for(int i=0; i<3; i++) {
-            Vec2d a = Vec2d(g, points[(i+1)%3]);
-            Vec2d b = Vec2d(g, points[(i+2)%3]);
-            angles[i] = a.unsigned_angle(b);
+            double angle = center_vectors[indexes[(i+1)%3]].ox_angle() -
+                    center_vectors[indexes[i]].ox_angle();
+            angles[i] = fmod(angle + 2*M_PI, 2*M_PI);
         }
+
 
         /* Find the smallest angle and putting it first */
         for(int i=1; i<3; i++) {
