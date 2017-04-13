@@ -41,6 +41,12 @@ struct Vec2d {
         return Vec2d(this->x + v.x, this->y + v.y);
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const Vec2d &v)  {
+        // write obj to stream
+        os << "x : " << v.x << "  y : " << v.y;
+        return os;
+    }
+
     inline double dot(Vec2d v) const {
         return this->x*v.x + this->y*v.y;
     }
@@ -74,8 +80,35 @@ struct comparator {
     }
 };
 
-/* Graham scan */
+/* Returns true if there is a left turn between p and the last two points
+ * in hull
+ */
+bool right_turn(vector<Vec2d> &hull, Vec2d &p) {
+    Vec2d u = Vec2d(hull[hull.size() - 2], hull[hull.size() -1]);
+    Vec2d v = Vec2d(hull[hull.size() - 1], p);
 
+    return u.vect(v) < 0;
+}
+
+/* Graham scan, returns the convex hull of the polygon */
+vector<Vec2d> graham(vector<Vec2d> &polygon) {
+
+    /* Sorting the vertices*/
+    comparator cmp(polygon[0]);
+    sort(polygon.begin() + 1, polygon.end(), cmp);
+
+    vector<Vec2d> hull;
+    hull.push_back(polygon[0]);
+    hull.push_back(polygon[1]);
+
+    for (unsigned int i=2; i<polygon.size(); i++) {
+        while(right_turn(hull, polygon[i]))
+            hull.pop_back();
+        hull.push_back(polygon[i]);
+    }
+
+    return hull;
+}
 
 
 int main() {
@@ -96,9 +129,11 @@ int main() {
             polygon.push_back(Vec2d((double) x, (double) y));
         }
 
-        /* Sorting the vertices for Graham scan */
-        comparator cmp(polygon[0]);
-        sort(polygon.begin() + 1, polygon.end(), cmp);
+        vector<Vec2d> hull = graham(polygon);
+
+        for (auto tmp : hull)
+            cout << tmp << endl;
+
     }
 
     return 0;
