@@ -4,6 +4,9 @@
  */
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <limits>
+#include <cmath>
 
 #define EPS 0.0000001
 
@@ -112,8 +115,10 @@ vector<Vec2d> graham(vector<Vec2d> &polygon) {
 
 
 int main() {
+    int serial = 0;
 
     while(true) {
+        serial++;
         int n;
         if (scanf("%d", &n) != 1)
             return -1;
@@ -131,9 +136,24 @@ int main() {
 
         vector<Vec2d> hull = graham(polygon);
 
-        for (auto tmp : hull)
-            cout << tmp << endl;
+        /* Leaning hull agaisnt a wall, calculating distance of the other wall */
+        double min_max = numeric_limits<double>::max();
+        for(unsigned int i=0; i< hull.size(); i++) {
+            Vec2d base = Vec2d(hull[i], hull[(i+1)%hull.size()]);
+            double current_max = 0;
+            for(auto point : hull) {
+                Vec2d u = Vec2d(hull[i], point);
+                double dist = fabs(u.vect(base)) / base.norm();
+                if (dist > current_max)
+                    current_max = dist;
+            }
+            if (current_max <= min_max)
+                min_max = current_max;
+        }
 
+        /* Rounding the result */
+        float rounded_result = round(min_max * 100)/100;
+        printf("Case %d: %.2f\n", serial, rounded_result);
     }
 
     return 0;
