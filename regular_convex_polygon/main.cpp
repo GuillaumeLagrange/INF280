@@ -1,3 +1,8 @@
+/* Guillaume Lagrange
+ * Jumping Monkey
+ * https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&category=543&page=show_problem&problem=3838
+ */
+
 #include <iostream>
 #include <algorithm>
 #include <string>
